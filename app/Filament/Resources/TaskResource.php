@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\TaskStatus;
 use App\Filament\Resources\TaskResource\Pages;
-use App\Filament\Resources\TaskResource\RelationManagers;
 use App\Models\Task;
-use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -23,16 +26,17 @@ class TaskResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('project_id')
+                TextInput::make('project_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required(),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\DatePicker::make('deadline'),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                DatePicker::make('deadline'),
+                ToggleButtons::make('status')
+                    ->options(TaskStatus::class)
+                    ->inline(),
             ]);
     }
 
