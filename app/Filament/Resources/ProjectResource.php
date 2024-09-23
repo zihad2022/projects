@@ -5,11 +5,14 @@ namespace App\Filament\Resources;
 use App\Enums\ProjectStatus;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
-use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,25 +27,25 @@ class ProjectResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
+                TextInput::make('user_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required(),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('budget')
+                TextInput::make('budget')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\TextInput::make('advanced_money')
+                TextInput::make('advanced_money')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\DatePicker::make('deadline'),
+                DatePicker::make('deadline'),
                 ToggleButtons::make('status')
                     ->options(ProjectStatus::class)
                     ->inline(),
+                RichEditor::make('description')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -50,27 +53,27 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('budget')
+                TextColumn::make('budget')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('advanced_money')
+                TextColumn::make('advanced_money')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('deadline')
+                TextColumn::make('deadline')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
