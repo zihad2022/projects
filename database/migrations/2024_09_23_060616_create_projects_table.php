@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('deadline')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
