@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ProjectStatus;
 use App\Filament\Resources\ProjectResource\Pages;
-use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Models\Project;
 use Filament\Forms;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -39,8 +40,9 @@ class ProjectResource extends Resource
                     ->numeric()
                     ->default(0),
                 Forms\Components\DatePicker::make('deadline'),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                ToggleButtons::make('status')
+                    ->options(ProjectStatus::class)
+                    ->inline(),
             ]);
     }
 
