@@ -40,7 +40,10 @@ class TaskResource extends Resource
                     DatePicker::make('deadline'),
                     ToggleButtons::make('status')
                         ->options(TaskStatus::class)
-                        ->inline(),
+                        ->inline()
+                        ->default(TaskStatus::Pending->value)
+                    // ->disabled(fn ($state) => $state == ProjectStatus::Completed->value)
+                        ->required(),
                     RichEditor::make('description')
                         ->columnSpanFull(),
                 ]),
