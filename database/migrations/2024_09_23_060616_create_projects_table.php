@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('budget', 10, 2)->default(0);
             $table->decimal('advanced_money', 10, 2)->default(0);
+            $table->decimal('due_money', 10, 2)->default(0);
             $table->date('deadline')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
