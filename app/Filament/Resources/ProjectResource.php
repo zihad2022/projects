@@ -7,6 +7,7 @@ use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
@@ -27,26 +28,33 @@ class ProjectResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('budget')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                TextInput::make('advanced_money')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                DatePicker::make('deadline'),
-                ToggleButtons::make('status')
-                    ->options(ProjectStatus::class)
-                    ->inline(),
-                RichEditor::make('description')
-                    ->columnSpanFull(),
+                Section::make()->columns(2)->schema(self::formSchema()),
             ]);
+    }
+
+    public static function formSchema(): array
+    {
+        return [
+            TextInput::make('user_id')
+                ->required()
+                ->numeric(),
+            TextInput::make('name')
+                ->required(),
+            TextInput::make('budget')
+                ->required()
+                ->numeric()
+                ->default(0),
+            TextInput::make('advanced_money')
+                ->required()
+                ->numeric()
+                ->default(0),
+            DatePicker::make('deadline'),
+            ToggleButtons::make('status')
+                ->options(ProjectStatus::class)
+                ->inline(),
+            RichEditor::make('description')
+                ->columnSpanFull(),
+        ];
     }
 
     public static function table(Table $table): Table
