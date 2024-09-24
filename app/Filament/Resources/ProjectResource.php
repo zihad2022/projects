@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ProjectStatus;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,34 +24,39 @@ class ProjectResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('budget')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('advanced_money')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\DatePicker::make('deadline'),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Section::make()->columns(2)->schema(self::formSchema()),
             ]);
+    }
+
+    public static function formSchema(): array
+    {
+        return [
+            Forms\Components\TextInput::make('name')
+                ->required(),
+            Forms\Components\TextInput::make('budget')
+                ->required()
+                ->numeric()
+                ->default(0),
+            Forms\Components\TextInput::make('advanced_money')
+                ->required()
+                ->numeric()
+                ->default(0),
+            Forms\Components\DatePicker::make('deadline'),
+            Forms\Components\ToggleButtons::make('status')
+                ->options(ProjectStatus::class)
+                ->inline()
+                ->default(ProjectStatus::Pending->value)
+                // ->disabled(fn ($state) => $state == ProjectStatus::Completed->value)
+                ->required(),
+            Forms\Components\RichEditor::make('description')
+                ->columnSpanFull(),
+        ];
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('budget')
