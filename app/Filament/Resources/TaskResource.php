@@ -32,7 +32,9 @@ class TaskResource extends Resource
                 Section::make()->columns(2)->schema([
                     Select::make('project_id')
                         ->relationship('project', 'name')
-                        ->createOptionForm(ProjectResource::formSchemas()),
+                        ->createOptionForm(ProjectResource::formSchema())
+                        ->required()
+                        ->preload(),
                     TextInput::make('name')
                         ->required(),
                     DatePicker::make('deadline'),
