@@ -5,11 +5,15 @@ namespace App\Filament\Resources;
 use App\Enums\ProjectStatus;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
-use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -32,24 +36,35 @@ class ProjectResource extends Resource
     public static function formSchema(): array
     {
         return [
-            Forms\Components\TextInput::make('name')
+            TextInput::make('name')
                 ->required(),
-            Forms\Components\TextInput::make('budget')
+            TextInput::make('budget')
                 ->required()
                 ->numeric()
-                ->default(0),
-            Forms\Components\TextInput::make('advanced_money')
+                ->default(0)
+                ->reactive(),
+            TextInput::make('advanced_money')
                 ->required()
                 ->numeric()
-                ->default(0),
-            Forms\Components\DatePicker::make('deadline'),
-            Forms\Components\ToggleButtons::make('status')
+                ->default(0)
+                ->reactive()
+                ->afterStateUpdated(function (callable $set, $state, $get) {
+                    $budget = (float) $get('budget');
+                    $dueMoney = max(0, $budget - (float) $state);
+                    $set('due_money', $dueMoney);
+                }),
+            TextInput::make('due_money')
+                ->required()
+                ->numeric()
+                ->default(fn ($get) => $get('due_money') ?? 0),
+            DatePicker::make('deadline'),
+            ToggleButtons::make('status')
                 ->options(ProjectStatus::class)
                 ->inline()
                 ->default(ProjectStatus::Pending->value)
-                // ->disabled(fn ($state) => $state == ProjectStatus::Completed->value)
+                 // ->disabled(fn ($state) => $state == ProjectStatus::Completed->value)
                 ->required(),
-            Forms\Components\RichEditor::make('description')
+            RichEditor::make('description')
                 ->columnSpanFull(),
         ];
     }
@@ -58,29 +73,32 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('budget')
+                TextColumn::make('budget')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('advanced_money')
+                TextColumn::make('advanced_money')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('deadline')
+                TextColumn::make('due_money')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('deadline')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
