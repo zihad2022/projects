@@ -54,15 +54,13 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('project_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('project.name'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('deadline')
                     ->date()
                     ->sortable(),
-                TextColumn::make('status')
+                TextColumn::make('status')->badge()
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -77,6 +75,7 @@ class TaskResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
