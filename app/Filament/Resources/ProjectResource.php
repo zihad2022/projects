@@ -2,18 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\ProjectStatus;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -28,60 +22,56 @@ class ProjectResource extends Resource
     {
         return $form
             ->schema([
-                Section::make()->columns(2)->schema(self::formSchema()),
+                Forms\Components\TextInput::make('user_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('budget')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\TextInput::make('advanced_money')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\DatePicker::make('deadline'),
+                Forms\Components\TextInput::make('status')
+                    ->required(),
             ]);
-    }
-
-    public static function formSchema(): array
-    {
-        return [
-            TextInput::make('user_id')
-                ->required()
-                ->numeric(),
-            TextInput::make('name')
-                ->required(),
-            TextInput::make('budget')
-                ->required()
-                ->numeric()
-                ->default(0),
-            TextInput::make('advanced_money')
-                ->required()
-                ->numeric()
-                ->default(0),
-            DatePicker::make('deadline'),
-            ToggleButtons::make('status')
-                ->options(ProjectStatus::class)
-                ->inline(),
-            RichEditor::make('description')
-                ->columnSpanFull(),
-        ];
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('name')
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('budget')
+                Tables\Columns\TextColumn::make('budget')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('advanced_money')
+                Tables\Columns\TextColumn::make('advanced_money')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('deadline')
+                Tables\Columns\TextColumn::make('deadline')
                     ->date()
                     ->sortable(),
-                TextColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
                     ->searchable(),
-                TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
