@@ -56,6 +56,7 @@ class ProjectResource extends Resource
             TextInput::make('due_money')
                 ->required()
                 ->numeric()
+                ->readOnly()
                 ->default(fn ($get) => $get('due_money') ?? 0),
             DatePicker::make('deadline'),
             ToggleButtons::make('status')
