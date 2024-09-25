@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('budget', 10, 2)->default(0);
-            $table->decimal('advanced_money', 10, 2)->default(0);
-            $table->decimal('due_money', 10, 2)->default(0);
+            $table->unsignedInteger('budget')->default(0);
+            $table->unsignedInteger('advanced_money')->default(0);
+            $table->unsignedInteger('due_money')->default(0);
             $table->date('deadline')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
