@@ -42,15 +42,20 @@ class ProjectResource extends Resource
                 ->required()
                 ->numeric()
                 ->default(0)
-                ->reactive(),
+                ->reactive()
+                ->afterStateUpdated(function (callable $set, $state, $get) {
+                    $advancedMoney = $get('advanced_money');
+                    $dueMoney = max(0, $state - $advancedMoney);
+                    $set('due_money', $dueMoney);
+                }),
             TextInput::make('advanced_money')
                 ->required()
                 ->numeric()
                 ->default(0)
                 ->reactive()
                 ->afterStateUpdated(function (callable $set, $state, $get) {
-                    $budget = (float) $get('budget');
-                    $dueMoney = max(0, $budget - (float) $state);
+                    $budget = $get('budget');
+                    $dueMoney = max(0, $budget - $state);
                     $set('due_money', $dueMoney);
                 }),
             TextInput::make('due_money')
